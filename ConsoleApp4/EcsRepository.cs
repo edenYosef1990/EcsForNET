@@ -12,6 +12,11 @@ namespace ConsoleApp4
         public int id;
     }
 
+    public abstract class ResourceBase
+    {
+
+    }
+
     public abstract class RelationSideBase { }
     public class SpecificRelationalSide : RelationSideBase
     {
@@ -22,6 +27,21 @@ namespace ConsoleApp4
     public sealed class Nobody : RelationSideBase { }
     public class EcsRepository
     {
+        public T GetResource<T>(Guid ResourceTypeGuid) where T : ResourceBase
+        {
+            if (!ResourcesRepository.TryGetValue(ResourceTypeGuid, out var Resource))
+            {
+                throw new Exception("Invalid Type GUID!");
+            }
+            return (T)Resource;
+        }
+
+        public void SetResource<T>(T resource) where T : ResourceBase, new()
+        {
+            var ResourceTypeGuid = typeof(T).GUID;
+            ResourcesRepository.Add(ResourceTypeGuid, resource);
+        }
+
         public T GetComponentForId<T>(int entityId, Guid ComponentTypeGuid) where T: ComponentBase {
            if(!ComponentsRepositroy.TryGetValue(ComponentTypeGuid, out var ComponentRepository))
             {
@@ -54,5 +74,6 @@ namespace ConsoleApp4
 
         public readonly Dictionary<Guid, List<(int, int)>> RelationsRepositroy = new Dictionary<Guid, List<(int, int)>>();
         public readonly Dictionary<Guid, List<ComponentBase>> ComponentsRepositroy = new Dictionary<Guid, List<ComponentBase>>();
+        public readonly Dictionary<Guid, ResourceBase> ResourcesRepository = new Dictionary<Guid, ResourceBase>();
     }
 }
