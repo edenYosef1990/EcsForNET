@@ -52,7 +52,7 @@ namespace ConsoleApp4
 
         public void QueryRelation<R>(RelationSideBase leftSide, RelationSideBase rightSide) { }
 
-        public Dictionary<Guid, List<(int,int)>> RelationsRepositroy;
-        public Dictionary<Guid, List<ComponentBase>> ComponentsRepositroy;
+        public readonly Dictionary<Guid, List<(int, int)>> RelationsRepositroy = new Dictionary<Guid, List<(int, int)>>();
+        public readonly Dictionary<Guid, List<ComponentBase>> ComponentsRepositroy = new Dictionary<Guid, List<ComponentBase>>();
     }
 }
