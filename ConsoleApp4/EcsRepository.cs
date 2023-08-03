@@ -23,8 +23,8 @@ namespace ConsoleApp4
         public int entityId;
     }
 
-    public sealed class Everyone : RelationSideBase { }
-    public sealed class Nobody : RelationSideBase { }
+    public sealed class All : RelationSideBase { }
+    public sealed class None : RelationSideBase { }
     public class EcsRepository
     {
         public T GetResource<T>(Guid ResourceTypeGuid) where T : ResourceBase
