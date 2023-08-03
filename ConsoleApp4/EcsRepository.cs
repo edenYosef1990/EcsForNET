@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleApp4;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,15 @@ namespace ConsoleApp4
     {
         public int id;
     }
+
+    public abstract class RelationSideBase { }
+    public class SpecificRelationalSide : RelationSideBase
+    {
+        public int entityId;
+    }
+
+    public sealed class Everyone : RelationSideBase { }
+    public sealed class Nobody : RelationSideBase { }
     public class EcsRepository
     {
         public T GetComponentForId<T>(int entityId, Guid ComponentTypeGuid) where T: ComponentBase {
@@ -39,6 +49,8 @@ namespace ConsoleApp4
             }
             relationRepository!.Add((leftEntity, RightEntity));
         }
+
+        public void QueryRelation<R>(RelationSideBase leftSide, RelationSideBase rightSide) { }
 
         public Dictionary<Guid, List<(int,int)>> RelationsRepositroy;
         public Dictionary<Guid, List<ComponentBase>> ComponentsRepositroy;
