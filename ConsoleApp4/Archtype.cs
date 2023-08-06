@@ -1,18 +1,18 @@
 ﻿namespace ConsoleApp4;
 
-public class Archtype
+public class ArchType
 {
 
 }
 
-public class ArchtypeHashingChacheNode
+public class ArchTypeHashingCacheNode
 {
     #region Ctor
-    public ArchtypeHashingChacheNode(Guid lastComponentGuid, Guid cachedGuid)
+    public ArchTypeHashingCacheNode(Guid lastComponentGuid, Guid cachedGuid)
     {
         LastComponentGuid = lastComponentGuid;
         _chechedGuid = cachedGuid;
-        _followingComponentsNodes = new List<ArchtypeHashingChacheNode>();
+        _followingComponentsNodes = new List<ArchTypeHashingCacheNode>();
     }
 
     #endregion
@@ -30,7 +30,7 @@ public class ArchtypeHashingChacheNode
             return node.getCachedGuid(componentsSequenceGuids, index + 1);
         }
 
-        var new_node = new ArchtypeHashingChacheNode(componentsSequenceGuids[index],
+        var new_node = new ArchTypeHashingCacheNode(componentsSequenceGuids[index],
             HashingGuidsVector(componentsSequenceGuids, 0, index));
         _followingComponentsNodes.Add(new_node);
         return new_node.getCachedGuid(componentsSequenceGuids, index + 1);
@@ -67,16 +67,16 @@ public class ArchtypeHashingChacheNode
     #region Private Fields
 
     private Guid _chechedGuid;
-    private List<ArchtypeHashingChacheNode> _followingComponentsNodes;
+    private List<ArchTypeHashingCacheNode> _followingComponentsNodes;
 
     #endregion
 }
 
-public class ArchtypeHashingCache
+public class ArchTypeHashingCache
 {
-    public ArchtypeHashingCache()
+    public ArchTypeHashingCache()
     {
-        _headerComponentsNode = new ArchtypeHashingChacheNode(Guid.Empty, Guid.Empty);
+        _headerComponentsNode = new ArchTypeHashingCacheNode(Guid.Empty, Guid.Empty);
     }
 
     public Guid GetHashFromSortedVector(Guid[] componentsSequenceGuidsVector)
@@ -84,7 +84,7 @@ public class ArchtypeHashingCache
 
     #region Private fields
 
-    private ArchtypeHashingChacheNode _headerComponentsNode;
+    private ArchTypeHashingCacheNode _headerComponentsNode;
 
     #endregion
 }
