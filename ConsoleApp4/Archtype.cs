@@ -8,32 +8,29 @@ public class ArchType
 public class ArchTypeHashingCacheNode
 {
     #region Ctor
-    public ArchTypeHashingCacheNode(Guid lastComponentGuid, Guid cachedGuid)
+    public ArchTypeHashingCacheNode(Guid cachedGuid)
     {
-        LastComponentGuid = lastComponentGuid;
         _chechedGuid = cachedGuid;
-        _followingComponentsNodes = new List<ArchTypeHashingCacheNode>();
+        _followingComponentsNodes = new Dictionary<Guid, ArchTypeHashingCacheNode>();
     }
 
     #endregion
 
-    public Guid LastComponentGuid { get; }
-
-    public Guid getCachedGuid(Guid[] componentsSequenceGuids, int index)
+    public Guid GetCachedGuid(Guid[] componentsSequenceGuids, int index)
     {
         if (index == componentsSequenceGuids.Length - 1) return _chechedGuid;
 
-        var node = _followingComponentsNodes.Find(node => node.LastComponentGuid == componentsSequenceGuids[index]);
+        var node = _followingComponentsNodes[componentsSequenceGuids[index]];
 
         if (node != null)
         {
-            return node.getCachedGuid(componentsSequenceGuids, index + 1);
+            return node.GetCachedGuid(componentsSequenceGuids, index + 1);
         }
 
-        var new_node = new ArchTypeHashingCacheNode(componentsSequenceGuids[index],
-            HashingGuidsVector(componentsSequenceGuids, 0, index));
-        _followingComponentsNodes.Add(new_node);
-        return new_node.getCachedGuid(componentsSequenceGuids, index + 1);
+
+        var new_node = new ArchTypeHashingCacheNode(HashingGuidsVector(componentsSequenceGuids, 0, index));
+        _followingComponentsNodes.Add(componentsSequenceGuids[index],new_node);
+        return new_node.GetCachedGuid(componentsSequenceGuids, index + 1);
     }
 
     #region Private Methods
@@ -66,8 +63,8 @@ public class ArchTypeHashingCacheNode
 
     #region Private Fields
 
-    private Guid _chechedGuid;
-    private List<ArchTypeHashingCacheNode> _followingComponentsNodes;
+    private readonly Guid _chechedGuid;
+    private readonly Dictionary<Guid,ArchTypeHashingCacheNode> _followingComponentsNodes;
 
     #endregion
 }
@@ -76,15 +73,15 @@ public class ArchTypeHashingCache
 {
     public ArchTypeHashingCache()
     {
-        _headerComponentsNode = new ArchTypeHashingCacheNode(Guid.Empty, Guid.Empty);
+        _headerComponentsNode = new ArchTypeHashingCacheNode(Guid.Empty);
     }
 
     public Guid GetHashFromSortedVector(Guid[] componentsSequenceGuidsVector)
-    => _headerComponentsNode.getCachedGuid(componentsSequenceGuidsVector, 0);
+    => _headerComponentsNode.GetCachedGuid(componentsSequenceGuidsVector, 0);
 
     #region Private fields
 
-    private ArchTypeHashingCacheNode _headerComponentsNode;
+    private readonly ArchTypeHashingCacheNode _headerComponentsNode;
 
     #endregion
 }
