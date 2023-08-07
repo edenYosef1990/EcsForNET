@@ -18,11 +18,9 @@ public class ArchTypeHashingCacheNode
 
     public Guid GetCachedGuid(Guid[] componentsSequenceGuids, int index)
     {
-        if (index == componentsSequenceGuids.Length - 1) return _chechedGuid;
+        if (index > componentsSequenceGuids.Length - 1) return _chechedGuid;
 
-        var node = _followingComponentsNodes[componentsSequenceGuids[index]];
-
-        if (node != null)
+        if (_followingComponentsNodes.TryGetValue(componentsSequenceGuids[index], out var node))
         {
             return node.GetCachedGuid(componentsSequenceGuids, index + 1);
         }
@@ -52,7 +50,7 @@ public class ArchTypeHashingCacheNode
     public Guid HashingGuidsVector(Guid[] guids, int startIdx, int endIdx)
     {
         var result = Guid.Empty;
-        for (int i = startIdx; i < endIdx; i++)
+        for (int i = startIdx; i <= endIdx; i++)
         {
             result = XorGuids(result, guids[i]);
         }
