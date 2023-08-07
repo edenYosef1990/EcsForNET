@@ -13,20 +13,20 @@ public static class CreateSystemExtensions
     public static void CreateSystem<A>(Action<A> systemFunction)
     where A : IQuery
     {
-        var bla = systemFunction.GetMethodInfo().GetParameters();
-        foreach (var para in bla)
-        {
-            Console.WriteLine(para.ParameterType.ToString());
-            var stam = para.GetType();
-            if (para.ParameterType.IsConstructedGenericType)
-            {
-                Console.WriteLine("generic!");
-                foreach (var genericType in para.ParameterType.GetGenericArguments())
-                {
-                    Console.WriteLine("\t" + genericType.ToString());
-                }
-            }
-        }
+        //var bla = systemFunction.GetMethodInfo().GetParameters();
+        //foreach (var para in bla)
+        //{
+        //    Console.WriteLine(para.ParameterType.ToString());
+        //    var stam = para.GetType();
+        //    if (para.ParameterType.IsConstructedGenericType)
+        //    {
+        //        Console.WriteLine("generic!");
+        //        foreach (var genericType in para.ParameterType.GetGenericArguments())
+        //        {
+        //            Console.WriteLine("\t" + genericType.ToString());
+        //        }
+        //    }
+        //}
     }
 
     public static void CreateSystem<A, B>(Action<A, B> systemFunction)

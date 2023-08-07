@@ -2,7 +2,7 @@
 
 public class ArchType
 {
-
+    public List<byte> Data { get; set; } = new List<byte>(); // TODO: for future optimizations , could use keep memory pool
 }
 
 public class ArchTypeHashingCacheNode
@@ -16,19 +16,19 @@ public class ArchTypeHashingCacheNode
 
     #endregion
 
-    public Guid GetCachedGuid(Guid[] componentsSequenceGuids, int index)
+    public Guid GetCachedGuid(Guid[] componentsSequenceSortedGuids, int index)
     {
-        if (index > componentsSequenceGuids.Length - 1) return _chechedGuid;
+        if (index > componentsSequenceSortedGuids.Length - 1) return _chechedGuid;
 
-        if (_followingComponentsNodes.TryGetValue(componentsSequenceGuids[index], out var node))
+        if (_followingComponentsNodes.TryGetValue(componentsSequenceSortedGuids[index], out var node))
         {
-            return node.GetCachedGuid(componentsSequenceGuids, index + 1);
+            return node.GetCachedGuid(componentsSequenceSortedGuids, index + 1);
         }
 
 
-        var new_node = new ArchTypeHashingCacheNode(componentsSequenceGuids.HashingGuidsVector(0, index));
-        _followingComponentsNodes.Add(componentsSequenceGuids[index],new_node);
-        return new_node.GetCachedGuid(componentsSequenceGuids, index + 1);
+        var new_node = new ArchTypeHashingCacheNode(componentsSequenceSortedGuids.HashingGuidsVector(0, index));
+        _followingComponentsNodes.Add(componentsSequenceSortedGuids[index],new_node);
+        return new_node.GetCachedGuid(componentsSequenceSortedGuids, index + 1);
     }
 
     #region Private Fields
@@ -46,8 +46,8 @@ public class ArchTypeHashingCache
         _headerComponentsNode = new ArchTypeHashingCacheNode(Guid.Empty);
     }
 
-    public Guid GetHashFromSortedVector(Guid[] componentsSequenceGuidsVector)
-    => _headerComponentsNode.GetCachedGuid(componentsSequenceGuidsVector, 0);
+    public Guid GetHashFromSortedVector(Guid[] componentsSequenceGuidsSortedVector)
+    => _headerComponentsNode.GetCachedGuid(componentsSequenceGuidsSortedVector, 0);
 
     #region Private fields
 
@@ -56,4 +56,31 @@ public class ArchTypeHashingCache
     #endregion
 }
 
+public class ArchTypeQuery
+{
+    public List<byte>? Data { get; set; }
+}
 
+
+public class ArchTypeDataStorage
+{
+    private Dictionary<Guid, ArchType> _archtypesDataDict;
+    private ArchTypeHashingCache _archTypeHashingCache;
+
+    public ArchTypeDataStorage(ArchTypeHashingCache archTypeHashingCache)
+    {
+        _archTypeHashingCache = archTypeHashingCache;
+        _archtypesDataDict = new Dictionary<Guid, ArchType>();
+    }
+
+    public ArchTypeQuery GetQueryForArchType(Guid[] archTypeComponentsGuidsSortedVector)
+    {
+        var hash = _archTypeHashingCache
+            .GetHashFromSortedVector(archTypeComponentsGuidsSortedVector);
+        if (!_archtypesDataDict.TryGetValue(hash, out var archtypeData)){
+            _archtypesDataDict.Add(hash, new ArchType());
+        }
+        var data = archtypeData.Data;
+        return new ArchTypeQuery { Data = data };
+    }
+}
