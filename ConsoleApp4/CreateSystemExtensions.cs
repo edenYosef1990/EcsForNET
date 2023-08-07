@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace ConsoleApp4;
+﻿namespace ConsoleApp4;
 
 public class QueryClass<T> : IQuery
 {
@@ -120,7 +118,7 @@ public static class CreateSystemExtensions
 
     }
 
-    public static void CreateSystem<A, B, C, D, E, F, G ,H>(Action<A, B, C, D, E, F, G, H> systemFunction)
+    public static void CreateSystem<A, B, C, D, E, F, G, H>(Action<A, B, C, D, E, F, G, H> systemFunction)
     where A : IQuery
     where B : IQuery
     where C : IQuery
