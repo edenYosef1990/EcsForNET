@@ -49,7 +49,7 @@
             var guids = new Guid[] { guid1, guid2, guid3 };
             var cache = new ArchTypeHashingCache();
             var res = cache.GetHashFromSortedVector(guids);
-            var otherRes = new Guid[] { guid1, guid2, guid3 }.HashingGuidsVector(, 0, 2);
+            var otherRes = new Guid[] { guid1, guid2, guid3 }.HashingGuidsVector(0, 2);
             var isEqual = res.Equals(otherRes);
         }
     }
