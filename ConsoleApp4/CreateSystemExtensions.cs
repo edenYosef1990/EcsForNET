@@ -6,11 +6,18 @@ public class QueryClass<T> : IQuery
 }
 
 public interface IQuery { }
+
+public class RetunVal
+{
+    public SystemQueryInfo Info { get; set; }
+    public Action Action { get; set; }
+}
 public static class CreateSystemExtensions
 {
-    public static void CreateSystem<A>(Action<A> systemFunction)
+    public static SystemQueryInfo CreateSystem<A>(Action<A> systemFunction)
     where A : IQuery
     {
+        return SystemQueryFactory.GenerateSystemQueryInfo(new Type[] { typeof(A) });
         //var bla = systemFunction.GetMethodInfo().GetParameters();
         //foreach (var para in bla)
         //{
@@ -27,14 +34,18 @@ public static class CreateSystemExtensions
         //}
     }
 
-    public static void CreateSystem<A, B>(Action<A, B> systemFunction)
+
+
+    public static RetunVal CreateSystem<A, B>(Action<A, B> systemFunction)
         where A : IQuery
         where B : IQuery
     {
-        var AGuid = typeof(A).GUID;
-        var BGuid = typeof(B).GUID;
-        var sortedGuidVector = new List<Guid> { AGuid, BGuid };
-        sortedGuidVector.Sort();
+        var info = SystemQueryFactory.GenerateSystemQueryInfo(new Type[] { typeof(A), typeof(B) });
+        return new RetunVal()
+        {
+            Info = info,
+            Action = (() => systemFunction((A)info.Queries[0], (B)info.Queries[1]))
+        };
     }
 
     public static void CreateSystem<A, B, C>(Action<A, B, C> systemFunction)
