@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleApp4
+﻿namespace ConsoleApp4
 {
-    public class SystemQueryInfo {
-        public List<IQuery> Queries = new List<IQuery>();
+    public class SystemQueryInfo
+    {
+        public List<Query> Queries = new List<Query>();
     }
     public static class SystemQueryFactory
     {

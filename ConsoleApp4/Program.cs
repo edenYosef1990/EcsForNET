@@ -1,7 +1,7 @@
 ﻿namespace ConsoleApp4
 {
 
-    public class Bla<T> : IQuery
+    public class Bla<T> : Query
     {
         public Bla(T t) { }
     }
@@ -17,6 +17,18 @@
         }
     }
 
+    public struct CompA
+    {
+        int a;
+        int b;
+    }
+
+    public struct CompB
+    {
+        int a;
+        int b;
+    }
+
     internal class Program
     {
         public void foo(int arg1, int arg2, string arg3, GenericInteface arg4)
@@ -26,8 +38,9 @@
 
         static void Main(string[] args)
         {
-            CreateSystemExtensions.CreateSystem(((Bla<int> a) => { }));
-            
+            //CreateSystemExtensions.CreateSystem(((Bla<int> a) => { }));
+            CreateSystemExtensions.CreateSystem(((ComponentsQuery<CompA,CompB> a) => { }));
+
             //var guid1 = Guid.NewGuid();
             //var guid2 = Guid.NewGuid();
             //var guid3 = Guid.NewGuid();
